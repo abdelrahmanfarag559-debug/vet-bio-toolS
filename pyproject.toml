@@ -4,13 +4,33 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vetbiotools"
-version = "1.0.0"
-description = "Open-source Python utilities for molecular diagnostics and veterinary biotechnology."
-requires-python = ">=3.8"
-authors = [
-  { name="Abdelrahman Farag", email="abdelrahman.farag.vet@gmail.com" },
+version = "2.0.0"
+description = "Validated, dependency-free calculators for veterinary molecular biology and pharmacology labs."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Abdelrahman Farag" }]
+keywords = ["veterinary", "qPCR", "PCR", "primer", "MIQE", "spectrophotometry", "dosage", "bioinformatics"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[project.scripts]
+vetbiotools = "vetbiotools.cli:main"
+
 [project.urls]
-"Homepage" = "https://github.com/abdelrahmanfarag559-debug/vet-bio-toolS"
-"Bug Tracker" = "https://github.com/abdelrahmanfarag559-debug/vet-bio-toolS/issues"
+Homepage = "https://github.com/abdelrahmanfarag559-debug/vet-bio-tools"
+"Bug Tracker" = "https://github.com/abdelrahmanfarag559-debug/vet-bio-tools/issues"
+
+[tool.setuptools.packages.find]
+include = ["vetbiotools*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
