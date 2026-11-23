@@ -1,66 +1,56 @@
 # VetBioTools 🧬🐴
 
-![CI Pipeline](https://github.com/abdelrahmanfarag559-debug/vet-bio-toolS/actions/workflows/ci.yml/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
+![CI](https://github.com/abdelrahmanfarag559-debug/vet-bio-tools/actions/workflows/ci.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)
+![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen.svg)
 
-**VetBioTools** is a specialized open-source Python package engineered to simplify and automate bio-computing, molecular diagnostics (PCR/qPCR), spectrophotometric quality control, and clinical pharmacology calculations in veterinary research and biotechnology laboratories.
+## The problem
+Veterinary and biotechnology labs still run critical calculations (master mixes, primer Tm, qPCR efficiency, nucleic acid purity, dilutions, drug volumes) on ad-hoc spreadsheets and by hand. Silent unit mistakes, wrong formulas and missing QC checks cause failed experiments and, in clinical work, dosing errors. **VetBioTools** is a dependency-free, fully tested, citation-backed toolkit that validates inputs, applies published methods, and *tells you when something looks wrong*.
 
----
+## Features
+| Module | What it does |
+|---|---|
+| `pcr` | SantaLucia nearest-neighbor Tm, GC%, primer QC rules (length, GC clamp, runs, dimers), pair compatibility, master mix for any volume/stock |
+| `qpcr` | Standard curve (slope, R², efficiency), Livak 2^-ΔΔCq, Pfaffl ratio, replicate QC (MIQE-oriented) |
+| `spectro` | dsDNA/ssDNA/RNA quantification, A320 correction, A260/280 and A260/230 diagnosis |
+| `pharmacology` | mg/kg dose to mL, % w/v conversion, injection-site split, CRI rate, C1V1 dilution |
+| `cli` | JSON output for pipelines and lab notebooks |
 
-## Key Features
-
-- 🧪 **PCR & Primer Utilities (`vetbiotools.pcr`)**:
-  - Automated Master Mix calculations with customizable reaction margins.
-  - Primer Melting Temperature ($T_m$) estimation using the Wallace rule for short primers (< 14 nt) and a GC%-based approximation for longer primers. These are screening approximations, not nearest-neighbor thermodynamics, and do not account for salt concentration.
-  - Precise $GC\%$ content determination.
-
-- 🔬 **Spectrophotometry Diagnostics (`vetbiotools.spectro`)**:
-  - Quantification of dsDNA and RNA from $A_{260}$ absorbance (assuming a 1 cm path length).
-  - Heuristic assessment of $A_{260}/A_{280}$ and $A_{260}/A_{230}$ ratios with contamination flags (protein, phenol, carbohydrate, and salt carryover). Ratios are screening indicators and do not by themselves prove the identity of a contaminant.
-
-- 🐎 **Equine Pharmacology (`vetbiotools.pharmacology`)**:
-  - Administration volume and dosage calculations for equine veterinary practice. For calculation support only; not a substitute for veterinary clinical judgment or a validated dosing reference.
-
----
-
-## Installation
-
-Install locally in editable mode:
-
+## Install
 ```bash
-git clone https://github.com/abdelrahmanfarag559-debug/vet-bio-toolS.git
-cd vet-bio-toolS
-pip install -e .
+git clone https://github.com/abdelrahmanfarag559-debug/vet-bio-tools.git
+cd vet-bio-tools
+pip install -e ".[dev]"
+pytest
 ```
 
-## Quick Usage Example
-
+## Usage
 ```python
-from vetbiotools import PrimerAnalyzer, NucleicAcidQuant, EquineDosageCalculator
+from vetbiotools import PrimerAnalyzer, StandardCurve, DosageCalculator
 
-# 1. Analyze Primer
-sequence = "ATGCGCAATGCGC"
-print("GC Content:", PrimerAnalyzer.calculate_gc_content(sequence), "%")
-print("Melting Temp (Tm):", PrimerAnalyzer.calculate_melting_temp(sequence), "°C")
-
-# 2. Evaluate Nucleic Acid Purity
-purity = NucleicAcidQuant.evaluate_purity(a260=1.0, a280=0.55, a230=0.50)
-print("Purity Assessment:", purity)
-
-# 3. Equine Dose Calculation
-dose = EquineDosageCalculator.calculate_dose(weight_kg=500, dose_mg_per_kg=2.2, concentration_mg_per_ml=100)
-print("Dosage Result:", dose)
+PrimerAnalyzer.evaluate_pair("AGCGGATAACAATTTCACACAGGA", "CCTGTGTGAAATTGTTATCCGCT")
+StandardCurve.fit([1, 2, 3, 4, 5], [28.1, 24.8, 21.4, 18.1, 14.7]).efficiency_pct
+DosageCalculator.calculate_dose(500, 2.2, 100, max_volume_per_site_ml=10)
 ```
-
-## Running Unit Tests
-
-Run the test suite using pytest:
-
 ```bash
-pytest tests/
+vetbiotools primer AGCGGATAACAATTTCACACAGGA CCTGTGTGAAATTGTTATCCGCT
+vetbiotools mastermix --samples 12 --volume 20
+vetbiotools purity --a260 1.0 --a280 0.55 --a230 0.5 --kind dna
+vetbiotools dose --weight 500 --dose 2.2 --conc 100 --max-site 10
 ```
 
-## License
+## Scientific validity
+Methods and references are listed in [docs/METHODS.md](docs/METHODS.md). Every formula has a hand-checked test.
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for details.
+## Safety disclaimer
+Research and educational software. It performs arithmetic only and contains **no drug database**. Always verify doses against the product label, a formulary and the responsible veterinarian.
+
+## Roadmap
+- Melt-curve analysis, Mg²⁺-aware Tm, hairpin ΔG
+- Plate-layout and Cq import (CSV from common cyclers)
+- Withdrawal-time / medication-control record helpers
+- Web UI (Streamlit) and PyPI release
+
+## Contributing & citation
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CITATION.cff](CITATION.cff). MIT licensed.
