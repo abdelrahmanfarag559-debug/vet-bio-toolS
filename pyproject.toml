@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vetbiotools"
+version = "1.0.0"
+description = "Open-source Python utilities for molecular diagnostics and veterinary biotechnology."
+requires-python = ">=3.8"
+authors = [
+  { name="Abdelrahman Farag", email="abdelrahman.farag.vet@gmail.com" },
+]
+
+[project.urls]
+"Homepage" = "https://github.com/abdelrahmanfarag559-debug/vet-bio-toolS"
+"Bug Tracker" = "https://github.com/abdelrahmanfarag559-debug/vet-bio-toolS/issues"
