@@ -18,4 +18,4 @@ jobs:
       - run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - run: pytest --cov=vetbiotools --cov-report=term-missing --cov-fail-under=88
+      - run: pytest --cov=vetbiotools --cov-report=term-missing --cov-fail-under=90
